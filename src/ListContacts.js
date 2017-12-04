@@ -3,7 +3,7 @@ import React, { Component } from 'react'
 function ListContacts (props) {
   return (
     <ol className='contact-list'>
-      {props.contactsProp.map(contact => (
+      {props.contactsProp.map((contact) => (
         <li key={contact.id} className='contact-list-item'>
           <div className='contact-avatar' style={
               {
@@ -14,7 +14,7 @@ function ListContacts (props) {
             <p>{contact.name}</p>
             <p>{contact.email}</p>
           </div>
-          <button className='contact-remove'>
+          <button onClick={() => props.onDeleteContact(contact)} className='contact-remove'>
             Remove
           </button>
         </li>

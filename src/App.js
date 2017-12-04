@@ -5,7 +5,7 @@ import ListContacts from './ListContacts'
 
 class App extends Component {
   state = {
-    contacts: [
+    contactsArr: [
       {
         "id": "ryan",
         "name": "Ryan Florence",
@@ -26,10 +26,18 @@ class App extends Component {
       }
     ]
   }
+
+  removeContact = (contact) => {
+    this.setState( (state) => ({
+      // return a new list of contacts
+      contactsArr: state.contactsArr.filter((c) =>  c.id !== contact.id)
+    }))
+  }
+
   render() {
     return (
       <div>
-        <ListContacts contactsProp={this.state.contacts} />
+        <ListContacts onDeleteContact={this.removeContact} contactsProp={this.state.contactsArr} />
       </div>
     )
   }
