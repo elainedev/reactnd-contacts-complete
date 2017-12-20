@@ -1,27 +1,69 @@
-import React, { Component } from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
+import escapeRegExp from 'escape-string-regexp'
+import sortBy from 'sort-by'
 
-function ListContacts (props) {
-  return (
-    <ol className='contact-list'>
-      {props.contactsProp.map((contact) => (
-        <li key={contact.id} className='contact-list-item'>
-          <div className='contact-avatar' style={
-              {
-                backgroundImage: `url(${contact.avatarURL})`
-              }
-            }/>
-          <div className='contact-details'>
-            <p>{contact.name}</p>
-            <p>{contact.email}</p>
-          </div>
-          <button onClick={() => props.onDeleteContact(contact)} className='contact-remove'>
-            Remove
-          </button>
-        </li>
-      ))}
-    </ol>
-  )
+class ListContacts extends Component {
+  static propTypes = {
+    contactsProp: PropTypes.array.isRequired,
+    onDeleteContact: PropTypes.func.isRequired
+  }
+
+  state = {
+    query: ''
+  }
+
+  updateQuery = input => {
+    this.setState({query: input.trim() })
+  }
+
+  render(){
+    let showingContacts
+    if (this.state.query){
+      const match = new RegExp(escapeRegExp(this.state.query), 'i')
+      showingContacts = this.props.contactsProp.filter(contact => match.test(contact.name));
+    } else {
+      showingContacts = this.props.contactsProp
+    }
+
+    showingContacts.sort(sortBy('name'))
+
+    return (
+      <div className='list-contacts'>
+        {JSON.stringify(this.state)}
+        <div className='list-contacts-top'>
+          <input
+            className='search-contacts'
+            type='text'
+            placeholder='Search contacts'
+            value={this.state.query}
+            onChange={(event) => this.updateQuery(event.target.value)}
+            />
+        </div>
+        <ol className='contact-list'>
+          {showingContacts.map((contact) => (
+            <li key={contact.id} className='contact-list-item'>
+              <div className='contact-avatar' style={
+                  {
+                    backgroundImage: `url(${contact.avatarURL})`
+                  }
+                }/>
+              <div className='contact-details'>
+                <p>{contact.name}</p>
+                <p>{contact.email}</p>
+              </div>
+              <button onClick={() => this.props.onDeleteContact(contact)} className='contact-remove'>
+                Remove
+              </button>
+            </li>
+          ))}
+        </ol>
+      </div>
+
+    )
+  }
 }
+
 
 
 export default ListContacts
