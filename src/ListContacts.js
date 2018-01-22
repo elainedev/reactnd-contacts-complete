@@ -10,36 +10,49 @@ class ListContacts extends Component {
   }
 
   state = {
-    query: ''
+    query: ""
   }
 
   updateQuery = input => {
     this.setState({query: input.trim() })
   }
 
+  clearQuery = () => {
+    this.setState( {query: ""} )
+  }
+
   render(){
+    const { contactsProp, onDeleteContact } = this.props
+    const { query } = this.state
     let showingContacts
-    if (this.state.query){
-      const match = new RegExp(escapeRegExp(this.state.query), 'i')
-      showingContacts = this.props.contactsProp.filter(contact => match.test(contact.name));
+    if (query){
+      const match = new RegExp(escapeRegExp(query), 'i')
+      showingContacts = contactsProp.filter(contact => match.test(contact.name));
     } else {
-      showingContacts = this.props.contactsProp
+      showingContacts = contactsProp
     }
 
     showingContacts.sort(sortBy('name'))
 
     return (
       <div className='list-contacts'>
-        {JSON.stringify(this.state)}
         <div className='list-contacts-top'>
           <input
             className='search-contacts'
             type='text'
             placeholder='Search contacts'
-            value={this.state.query}
+            value={query}
             onChange={(event) => this.updateQuery(event.target.value)}
             />
         </div>
+
+        {showingContacts.length !== contactsProp.length && (
+          <div className='showing-contacts'>
+            <span>Now showing {showingContacts.length} of {contactsProp.length}</span>
+            <button onClick={this.clearQuery}>Show all</button>
+          </div>
+        )}
+
         <ol className='contact-list'>
           {showingContacts.map((contact) => (
             <li key={contact.id} className='contact-list-item'>
