@@ -20,7 +20,7 @@ class CreateContact extends Component {
           <ImageInput
             className='create-contact-avatar-input'
             name='avatarURL'
-            maxHeight={200}
+            maxHeight={64}
           />
           <div className='create-contact-details'>
             <input type='text' name='name' placeholder='Name'/>

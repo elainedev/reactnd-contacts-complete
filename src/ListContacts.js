@@ -6,7 +6,7 @@ import sortBy from 'sort-by'
 
 class ListContacts extends Component {
   static propTypes = {
-    contactsProp: PropTypes.array.isRequired,
+    contacts: PropTypes.array.isRequired,
     onDeleteContact: PropTypes.func.isRequired
   }
 
@@ -23,14 +23,14 @@ class ListContacts extends Component {
   }
 
   render(){
-    const { contactsProp, onDeleteContact } = this.props
+    const { contacts, onDeleteContact } = this.props
     const { query } = this.state
     let showingContacts
     if (query){
       const match = new RegExp(escapeRegExp(query), 'i')
-      showingContacts = contactsProp.filter(contact => match.test(contact.name));
+      showingContacts = contacts.filter(contact => match.test(contact.name));
     } else {
-      showingContacts = contactsProp
+      showingContacts = contacts
     }
 
     showingContacts.sort(sortBy('name'))
@@ -46,14 +46,14 @@ class ListContacts extends Component {
             onChange={(event) => this.updateQuery(event.target.value)}
             />
           <Link
-            to="#create"
+            to="/create"
             className='add-contact'
           >Add Contact</Link>
         </div>
 
-        {showingContacts.length !== contactsProp.length && (
+        {showingContacts.length !== contacts.length && (
           <div className='showing-contacts'>
-            <span>Now showing {showingContacts.length} of {contactsProp.length}</span>
+            <span>Now showing {showingContacts.length} of {contacts.length}</span>
             <button onClick={this.clearQuery}>Show all</button>
           </div>
         )}
